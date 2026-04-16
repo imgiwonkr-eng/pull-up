@@ -3,11 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pull-up Master Path</title>
+    <title>Pull-up Path</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="턱걸이 마스터">
+    
+    <link rel="apple-touch-icon" href="https://imgiwonkr-eng.github.io/pull-up/icon.png">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@700;900&display=swap');
-        body { font-family: 'Pretendard', sans-serif; transition: background-color 0.3s, color 0.3s; }
+        body { font-family: 'Pretendard', sans-serif; transition: background-color 0.3s, color 0.3s; -webkit-tap-highlight-color: transparent; }
         
         body.white-mode { background-color: #f9fafb; color: #1f2937; }
         body.dark-mode { background-color: #000; color: #fff; }
@@ -25,21 +32,21 @@
         .blink-rest { animation: b-orange 1s infinite; }
         @keyframes b-orange { 0%, 100% { opacity: 1; } 50% { background-color: #ffedd5; color: #000; } }
 
-        #auto-modal, #memo-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 100; padding: 20px; }
-        .modal-content { background: white; color: black; padding: 30px; border-radius: 24px; text-align: center; max-width: 340px; width: 100%; }
+        #auto-modal, #memo-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); align-items: center; justify-content: center; z-index: 200; padding: 20px; backdrop-filter: blur(5px); }
+        .modal-content { background: white; color: black; padding: 30px; border-radius: 24px; text-align: center; max-width: 340px; width: 100%; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2); }
         
-        .calendar-panel { padding: 40px 20px; }
+        .calendar-panel { padding: 40px 20px; min-height: 400px; }
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; text-align: center; }
-        .day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 12px; font-size: 0.85rem; cursor: pointer; position: relative; }
+        .day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 12px; font-size: 0.85rem; cursor: pointer; position: relative; font-weight: 600; }
         
-        .white-mode .day { background: rgba(0,0,0,0.03); color: #1f2937; }
+        .white-mode .day { background: rgba(0,0,0,0.04); color: #1f2937; }
         .dark-mode .day { background: #1a1a1a; color: #fff; }
         
-        .has-record::after { content: ''; position: absolute; bottom: 4px; width: 4px; height: 4px; background: #3b82f6; border-radius: 50%; }
+        .has-record::after { content: ''; position: absolute; bottom: 6px; width: 4px; height: 4px; background: #3b82f6; border-radius: 50%; }
         .today { border: 2px solid #3b82f6 !important; color: #3b82f6 !important; font-weight: 900; }
 
-        .rep-counter { position: absolute; top: 20px; right: 20px; padding: 10px 15px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: center; min-width: 70px; border: 1px solid #f1f5f9; }
-        .white-mode .rep-counter { background: rgba(255,255,255,0.9); border-color: #f1f5f9; }
+        .rep-counter { position: absolute; top: 20px; right: 20px; padding: 10px 15px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: center; min-width: 70px; border: 1px solid #f1f5f9; z-index: 10; }
+        .white-mode .rep-counter { background: rgba(255,255,255,0.95); border-color: #f1f5f9; }
         .dark-mode .rep-counter { background: #1a1a1a; border-color: #333; color: white; }
     </style>
 </head>
