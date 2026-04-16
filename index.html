@@ -20,32 +20,32 @@
         .time-unit { width: 2.1ch; text-align: center; }
         .separator { width: 0.5ch; text-align: center; }
 
-        /* 깜빡임 애니메이션 */
         .blink-work { animation: b-red 1s infinite; }
-        @keyframes b-red { 0%, 100% { opacity: 1; } 50% { background-color: #fee2e2; } }
+        @keyframes b-red { 0%, 100% { opacity: 1; } 50% { background-color: #fee2e2; color: #000; } }
         .blink-rest { animation: b-orange 1s infinite; }
-        @keyframes b-orange { 0%, 100% { opacity: 1; } 50% { background-color: #ffedd5; } }
+        @keyframes b-orange { 0%, 100% { opacity: 1; } 50% { background-color: #ffedd5; color: #000; } }
 
-        /* 모달 스타일 */
         #auto-modal, #memo-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 100; padding: 20px; }
         .modal-content { background: white; color: black; padding: 30px; border-radius: 24px; text-align: center; max-width: 340px; width: 100%; }
         
-        /* 캘린더 스타일 */
         .calendar-panel { padding: 40px 20px; }
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; text-align: center; }
-        .day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 12px; font-size: 0.85rem; cursor: pointer; position: relative; background: rgba(0,0,0,0.03); }
-        .dark-mode .day { background: #111; }
+        .day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 12px; font-size: 0.85rem; cursor: pointer; position: relative; }
+        
+        .white-mode .day { background: rgba(0,0,0,0.03); color: #1f2937; }
+        .dark-mode .day { background: #1a1a1a; color: #fff; }
+        
         .has-record::after { content: ''; position: absolute; bottom: 4px; width: 4px; height: 4px; background: #3b82f6; border-radius: 50%; }
-        .today { border: 2px solid #3b82f6; color: #3b82f6; font-weight: 900; }
+        .today { border: 2px solid #3b82f6 !important; color: #3b82f6 !important; font-weight: 900; }
 
-        /* 세트수 카운터 위치 수정 (상단 이동) */
-        .rep-counter { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.9); padding: 10px 15px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: center; min-width: 70px; border: 1px solid #f1f5f9; }
-        .dark-mode .rep-counter { background: rgba(20,20,20,0.9); border-color: #333; }
+        .rep-counter { position: absolute; top: 20px; right: 20px; padding: 10px 15px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: center; min-width: 70px; border: 1px solid #f1f5f9; }
+        .white-mode .rep-counter { background: rgba(255,255,255,0.9); border-color: #f1f5f9; }
+        .dark-mode .rep-counter { background: #1a1a1a; border-color: #333; color: white; }
     </style>
 </head>
 <body class="white-mode select-none">
 
-    <button onclick="toggleTheme()" class="fixed top-4 left-4 z-[110] bg-gray-100 dark:bg-gray-800 p-2 px-3 rounded-full shadow-sm text-[10px] font-bold">
+    <button id="theme-btn" onclick="toggleTheme()" class="fixed top-4 left-4 z-[110] bg-gray-100 text-gray-800 dark:bg-white dark:text-black p-2 px-3 rounded-full shadow-md text-[10px] font-bold border border-gray-300">
         다크모드 전환
     </button>
 
@@ -82,42 +82,44 @@
             <span id="work-ms" class="time-unit text-slate-300 text-3xl">00</span>
         </div>
         <div class="flex gap-2 mb-6 scale-90">
-            <button onclick="addTime('work', 10)" class="bg-gray-100 text-gray-500 px-4 py-2 rounded-xl font-bold text-xs">+10초</button>
-            <button onclick="resetTime('work')" class="bg-gray-100 text-red-400 px-4 py-2 rounded-xl font-bold text-xs">초기화</button>
+            <button onclick="addTime('work', 60)" class="bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300 px-4 py-2 rounded-xl font-bold text-xs">+1분</button>
+            <button onclick="addTime('work', 10)" class="bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300 px-4 py-2 rounded-xl font-bold text-xs">+10초</button>
+            <button onclick="resetTime('work')" class="bg-gray-100 text-red-500 dark:bg-gray-800 dark:text-red-400 px-4 py-2 rounded-xl font-bold text-xs">초기화</button>
         </div>
         <div class="flex gap-4">
-            <button onclick="startTimer('work')" class="bg-[#3182f6] text-white px-10 py-4 rounded-2xl font-bold text-lg active:scale-95 transition shadow-lg">시작</button>
-            <button onclick="stopTimer('work')" class="bg-[#f2f4f6] text-[#4e5968] px-10 py-4 rounded-2xl font-bold text-lg active:scale-95 transition">정지</button>
+            <button onclick="startTimer('work')" class="bg-[#3182f6] text-white px-8 py-4 rounded-2xl font-bold text-lg active:scale-95 transition shadow-lg">운동 시작</button>
+            <button onclick="stopTimer('work')" class="bg-[#f2f4f6] dark:bg-gray-800 text-[#4e5968] dark:text-gray-300 px-8 py-4 rounded-2xl font-bold text-lg active:scale-95 transition">정지</button>
         </div>
         
         <div class="rep-counter">
             <p class="text-[8px] text-gray-400 font-bold uppercase mb-1">Sets</p>
             <p id="total-sets" class="text-2xl font-black text-blue-600 leading-none">0</p>
             <div class="flex gap-3 mt-2 justify-center">
-                <button onclick="changeSet(1)" class="text-gray-300 font-bold hover:text-blue-500">▲</button>
+                <button onclick="changeSet(1)" class="text-gray-400 font-bold hover:text-blue-500">▲</button>
                 <button onclick="changeSet(-1)" class="text-[8px] text-gray-400 font-bold hover:text-red-500">R</button>
             </div>
         </div>
     </div>
 
     <div id="rest-bg" class="timer-section">
-        <h2 class="text-green-500 text-[10px] font-black tracking-[0.2em] mb-4 uppercase">Rest</h2>
+        <h2 class="text-green-500 text-[10px] font-black tracking-[0.2em] mb-4 uppercase">Rest (Gym Mode)</h2>
         <div class="timer-container mb-4">
             <span id="rest-min" class="time-unit">00</span><span class="separator">:</span>
             <span id="rest-sec" class="time-unit">30</span><span class="separator text-slate-300">:</span>
             <span id="rest-ms" class="time-unit text-slate-300 text-3xl">00</span>
         </div>
         <div class="flex gap-2 mb-6 scale-90">
-            <button onclick="addTime('rest', 10)" class="bg-gray-100 text-gray-500 px-4 py-2 rounded-xl font-bold text-xs">+10초</button>
-            <button onclick="resetTime('rest')" class="bg-gray-100 text-red-400 px-4 py-2 rounded-xl font-bold text-xs">초기화</button>
+            <button onclick="addTime('rest', 60)" class="bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300 px-4 py-2 rounded-xl font-bold text-xs">+1분</button>
+            <button onclick="addTime('rest', 10)" class="bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300 px-4 py-2 rounded-xl font-bold text-xs">+10초</button>
+            <button onclick="resetTime('rest')" class="bg-gray-100 text-red-500 dark:bg-gray-800 dark:text-red-400 px-4 py-2 rounded-xl font-bold text-xs">초기화</button>
         </div>
         <div class="flex gap-4">
-            <button onclick="startTimer('rest')" class="bg-[#00d082] text-white px-10 py-4 rounded-2xl font-bold text-lg active:scale-95 transition shadow-lg">시작</button>
-            <button onclick="stopTimer('rest')" class="bg-[#f2f4f6] text-[#4e5968] px-10 py-4 rounded-2xl font-bold text-lg active:scale-95 transition">정지</button>
+            <button onclick="startTimer('rest')" class="bg-[#00d082] text-white px-8 py-4 rounded-2xl font-bold text-lg active:scale-95 transition shadow-lg">휴식 시작</button>
+            <button onclick="stopTimer('rest')" class="bg-[#f2f4f6] dark:bg-gray-800 text-[#4e5968] dark:text-gray-300 px-8 py-4 rounded-2xl font-bold text-lg active:scale-95 transition">정지</button>
         </div>
     </div>
 
-    <div class="calendar-panel bg-white dark:bg-[#050505]">
+    <div id="calendar-area" class="calendar-panel white-mode">
         <h3 class="text-xl font-black mb-8 px-2">운동기록 및 메모</h3>
         <div class="calendar-grid mb-2 text-gray-400 font-black text-[10px] uppercase tracking-widest">
             <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
@@ -129,28 +131,33 @@
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function beep(f, d) { const o = audioCtx.createOscillator(); const g = audioCtx.createGain(); o.connect(g); g.connect(audioCtx.destination); o.frequency.value = f; g.gain.value = 0.03; o.start(); setTimeout(()=>o.stop(), d); }
 
-        const DEFAULTS = { work: 6000, rest: 3000 };
         let timers = { 
-            work: { ms: DEFAULTS.work, interval: null, bgId: 'work-bg', blinkClass: 'blink-work', baseMs: DEFAULTS.work }, 
-            rest: { ms: DEFAULTS.rest, interval: null, bgId: 'rest-bg', blinkClass: 'blink-rest', baseMs: DEFAULTS.rest } 
+            work: { ms: 6000, interval: null, bgId: 'work-bg', blinkClass: 'blink-work', baseMs: 6000 }, 
+            rest: { ms: 3000, interval: null, bgId: 'rest-bg', blinkClass: 'blink-rest', baseMs: 3000 } 
         };
         let history = JSON.parse(localStorage.getItem('pullup_history')) || {};
         let todayKey = new Date().toISOString().split('T')[0];
         let autoTimer = null;
         let nextStep = '';
 
-        window.onload = () => { renderCalendar(); updateStats(); };
+        window.onload = () => { 
+            if (!history[todayKey]) history[todayKey] = { sets: 0, memo: "" };
+            updateStats(); 
+            renderCalendar(); 
+            updateDisplay('work');
+            updateDisplay('rest');
+        };
 
         function toggleTheme() {
             document.body.classList.toggle('white-mode');
             document.body.classList.toggle('dark-mode');
-            const btn = document.querySelector('button[onclick="toggleTheme()"]');
-            btn.innerText = document.body.classList.contains('dark-mode') ? "라이트모드 전환" : "다크모드 전환";
+            const btn = document.getElementById('theme-btn');
+            const isDark = document.body.classList.contains('dark-mode');
+            btn.innerText = isDark ? "라이트모드 전환" : "다크모드 전환";
         }
 
         function updateStats() {
-            const todaySets = history[todayKey] ? history[todayKey].sets : 0;
-            document.getElementById('total-sets').innerText = todaySets;
+            document.getElementById('total-sets').innerText = history[todayKey].sets;
         }
 
         function renderCalendar() {
@@ -200,20 +207,27 @@
 
         function showAutoModal(type) {
             const modal = document.getElementById('auto-modal');
-            timers[type].ms = timers[type].baseMs; updateDisplay(type);
+            timers[type].ms = timers[type].baseMs; 
+            updateDisplay(type);
             let count = 5;
             document.getElementById('modal-countdown').innerText = count;
             modal.style.display = 'flex';
+            
             if (type === 'work') {
-                if (!history[todayKey]) history[todayKey] = { sets: 0, memo: "" };
                 history[todayKey].sets++;
                 localStorage.setItem('pullup_history', JSON.stringify(history));
                 updateStats(); renderCalendar();
+                document.getElementById('modal-title').innerText = "운동 완료!";
                 document.getElementById('modal-msg').innerText = `현재 ${history[todayKey].sets}세트 완료`;
                 nextStep = 'rest';
-            } else { nextStep = 'work'; }
+            } else { 
+                document.getElementById('modal-title').innerText = "휴식 완료!";
+                document.getElementById('modal-msg').innerText = "다음 세트를 준비하세요.";
+                nextStep = 'work'; 
+            }
             autoTimer = setInterval(() => {
-                count--; document.getElementById('modal-countdown').innerText = count;
+                count--; 
+                document.getElementById('modal-countdown').innerText = count;
                 if (count <= 0) confirmModal();
             }, 1000);
         }
@@ -221,6 +235,21 @@
         function confirmModal() { clearInterval(autoTimer); document.getElementById('auto-modal').style.display = 'none'; startTimer(nextStep); }
         function finishWorkout() { clearInterval(autoTimer); document.getElementById('auto-modal').style.display = 'none'; }
         function stopTimer(type) { clearInterval(timers[type].interval); timers[type].interval = null; document.getElementById(timers[type].bgId).classList.remove(timers[type].blinkClass); }
+        
+        function addTime(type, s) { 
+            timers[type].ms += (s*100); 
+            timers[type].baseMs = timers[type].ms; 
+            updateDisplay(type); 
+        }
+        
+        function resetTime(type) { 
+            stopTimer(type); 
+            // 초기화 시 무조건 0초로 리셋
+            timers[type].ms = 0; 
+            timers[type].baseMs = 0; 
+            updateDisplay(type); 
+        }
+
         function openMemo(date) { 
             const data = history[date] || { sets: 0, memo: "" };
             document.getElementById('memo-date').innerText = date;
@@ -237,10 +266,8 @@
             renderCalendar();
         }
         function closeMemo() { document.getElementById('memo-modal').style.display = 'none'; }
-        function addTime(type, s) { timers[type].ms += (s*100); timers[type].baseMs = timers[type].ms; updateDisplay(type); }
-        function resetTime(type) { stopTimer(type); timers[type].ms = 0; timers[type].baseMs = 0; updateDisplay(type); }
+        
         function changeSet(val) {
-            if (!history[todayKey]) history[todayKey] = { sets: 0, memo: "" };
             if (val === -1) history[todayKey].sets = 0; else history[todayKey].sets += val;
             localStorage.setItem('pullup_history', JSON.stringify(history));
             updateStats(); renderCalendar();
